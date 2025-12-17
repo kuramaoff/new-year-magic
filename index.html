@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>С Новым Годом! 🎄</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(#001122, #003344);
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+        
+        h1 {
+            color: #FFD700;
+            font-size: 3rem;
+            text-shadow: 0 0 20px #FF0000;
+            margin-bottom: 20px;
+            animation: glow 2s infinite alternate;
+        }
+        
+        .message {
+            color: white;
+            font-size: 1.5rem;
+            margin: 20px 0;
+            background: rgba(0,50,100,0.5);
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid gold;
+        }
+        
+        .tree {
+            font-size: 100px;
+            margin: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #FF0000; }
+            to { text-shadow: 0 0 30px #FFD700, 0 0 40px #FF0000; }
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-20px); }
+        }
+        
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tree">🎄</div>
+        <h1>С Новым 2025 Годом!</h1>
+        <div class="message">
+            Пусть этот год принесёт<br>
+            много радости, удачи<br>
+            и исполнения желаний!<br>
+            🎅✨🎁
+        </div>
+        <div class="tree">🎁</div>
+    </div>
+
+    <script>
+        // Создание снежинок
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.innerHTML = '❄';
+            snowflake.className = 'snowflake';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.fontSize = Math.random() * 15 + 10 + 'px';
+            snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+            document.body.appendChild(snowflake);
+            
+            // Анимация падения
+            const duration = Math.random() * 5 + 5;
+            const endLeft = parseFloat(snowflake.style.left) + (Math.random() * 50 - 25);
+            
+            snowflake.animate([
+                { transform: 'translateY(-100px)', left: snowflake.style.left },
+                { transform: 'translateY(100vh)', left: endLeft + 'vw' }
+            ], {
+                duration: duration * 1000,
+                easing: 'linear'
+            });
+            
+            setTimeout(() => snowflake.remove(), duration * 1000);
+        }
+        
+        // Создание фейерверков
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = Math.random() * 100 + 'vw';
+            firework.style.top = Math.random() * 100 + 'vh';
+            firework.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            document.body.appendChild(firework);
+            
+            firework.animate([
+                { transform: 'scale(1)', opacity: 1 },
+                { transform: 'scale(20)', opacity: 0 }
+            ], {
+                duration: 1000,
+                easing: 'ease-out'
+            });
+            
+            setTimeout(() => firework.remove(), 1000);
+        }
+        
+        // Запуск анимаций
+        setInterval(createSnowflake, 200);
+        setInterval(createFirework, 800);
+        
+        // Новогодняя музыка при клике (опционально)
+        document.body.addEventListener('click', function() {
+            const audio = new Audio('https://zvukipro.com/uploads/files/2022-12/1671727007_budilnik-s-novym-godom.mp3');
+            audio.volume = 0.3;
+            audio.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+        });
+    </script>
+</body>
+</html>
