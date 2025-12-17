@@ -2,10 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Happy New Year! 🎄</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* Основной фон - всегда покрывает всю область */
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+        }
+        
         body {
             background: linear-gradient(to bottom, 
                 #0a0a14 0%, 
@@ -15,23 +24,34 @@
                 #121232 80%, 
                 #14143a 100%);
             min-height: 100vh;
-            height: 100dvh;
-            overflow: hidden;
+            min-height: -webkit-fill-available;
+            min-height: fill-available;
+            min-height: 100dvh;
             font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             touch-action: manipulation;
-            padding: 20px;
-            width: 100vw;
-            position: fixed;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            -webkit-tap-highlight-color: transparent;
         }
         
-        /* Добавим звёзды на фон */
-        body::before {
-            content: '';
+        /* Звёзды на фон */
+        .stars-background {
             position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        /* Слой звёзд */
+        .stars-background::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -47,7 +67,6 @@
                 radial-gradient(1px 1px at 80% 90%, rgba(255, 255, 255, 0.2) 1px, transparent 2px),
                 radial-gradient(2px 2px at 90% 10%, rgba(255, 255, 255, 0.4) 1px, transparent 2px);
             background-size: 200px 200px;
-            z-index: -1;
             opacity: 0.6;
             animation: stars-twinkle 3s infinite alternate;
         }
@@ -55,6 +74,17 @@
         @keyframes stars-twinkle {
             0%, 100% { opacity: 0.6; }
             50% { opacity: 0.8; }
+        }
+        
+        /* Дополнительный чёрный оверлей для безопасности */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a14;
+            z-index: -3;
         }
         
         .container {
@@ -86,6 +116,7 @@
             margin: 20px auto;
             background: rgba(20, 30, 60, 0.7);
             backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             padding: 20px;
             border-radius: 15px;
             border: 2px solid #FFD700;
@@ -167,16 +198,43 @@
             z-index: 2;
         }
         
+        /* Дымка на горизонте */
+        .horizon-fog {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, 
+                rgba(10, 10, 30, 0.8) 0%,
+                transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
         /* Mobile specific adjustments */
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                background: linear-gradient(to bottom, 
+                    #0a0a14 0%, 
+                    #0c0c1a 25%, 
+                    #0e0e22 50%, 
+                    #10102a 75%, 
+                    #121232 100%);
+            }
+            
             .container {
                 padding: 15px;
+                max-width: 95%;
             }
             
             .message {
                 padding: 15px;
                 width: 95%;
                 margin: 15px auto;
+                backdrop-filter: blur(3px);
+                -webkit-backdrop-filter: blur(3px);
             }
             
             h1 {
@@ -188,9 +246,17 @@
                 margin: 10px;
             }
             
-            body::before {
+            .stars-background::before {
                 opacity: 0.5;
                 background-size: 150px 150px;
+            }
+            
+            /* Убедимся, что фон покрывает всю область на iOS */
+            @supports (-webkit-touch-callout: none) {
+                body {
+                    min-height: -webkit-fill-available;
+                    height: -webkit-fill-available;
+                }
             }
         }
         
@@ -209,7 +275,7 @@
             }
         }
         
-        /* Prevent overflow on landscape */
+        /* Landscape mode */
         @media (orientation: landscape) and (max-height: 600px) {
             .container {
                 transform: scale(0.85);
@@ -227,26 +293,40 @@
             .message {
                 margin: 10px auto;
                 padding: 15px;
+                backdrop-filter: blur(2px);
+                -webkit-backdrop-filter: blur(2px);
+            }
+            
+            .horizon-fog {
+                height: 40%;
             }
         }
         
-        /* Добавим лёгкую дымку на горизонте */
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30%;
-            background: linear-gradient(to top, 
-                rgba(10, 10, 30, 0.8) 0%,
-                transparent 100%);
-            pointer-events: none;
-            z-index: 0;
+        /* iOS Safari specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                /* iOS specific height fix */
+                height: 100dvh;
+                height: -webkit-fill-available;
+            }
+            
+            .container {
+                /* Prevent bouncing on iOS */
+                -webkit-overflow-scrolling: touch;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Чёрный оверлей для гарантии -->
+    <div class="background-overlay"></div>
+    
+    <!-- Звёздный фон -->
+    <div class="stars-background"></div>
+    
+    <!-- Дымка на горизонте -->
+    <div class="horizon-fog"></div>
+    
     <div class="container">
         <div class="tree">🎄</div>
         <h1>Happy New Year 2026!</h1>
@@ -497,6 +577,25 @@
             }
             lastTouchEnd = now;
         }, false);
+        
+        // iOS specific: fix for safe areas
+        function setSafeAreaStyles() {
+            const root = document.documentElement;
+            const safeAreaInsetTop = env('safe-area-inset-top') || '0px';
+            const safeAreaInsetBottom = env('safe-area-inset-bottom') || '0px';
+            
+            root.style.setProperty('--safe-area-inset-top', safeAreaInsetTop);
+            root.style.setProperty('--safe-area-inset-bottom', safeAreaInsetBottom);
+        }
+        
+        // Call on load and resize
+        window.addEventListener('load', setSafeAreaStyles);
+        window.addEventListener('resize', setSafeAreaStyles);
+        
+        // Prevent rubber-band scrolling on iOS
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== 1) { e.preventDefault(); }
+        }, { passive: false });
     </script>
 </body>
 </html>
