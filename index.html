@@ -179,23 +179,32 @@
     </div>
 
     <script>
-        // Snowflake creation
+        // Snowflake creation - FIXED: Start from very top
         function createSnowflake() {
             const snowflake = document.createElement('div');
             snowflake.innerHTML = '❄';
             snowflake.className = 'snowflake';
             snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.top = '-50px'; // Start above the screen
             snowflake.style.fontSize = Math.random() * 15 + 10 + 'px';
             snowflake.style.opacity = Math.random() * 0.5 + 0.3;
             document.body.appendChild(snowflake);
             
-            // Animation
+            // Animation - from above screen to below screen
             const duration = Math.random() * 5 + 5;
             const endLeft = parseFloat(snowflake.style.left) + (Math.random() * 50 - 25);
+            const startY = -50; // Start from 50px above the screen
+            const endY = window.innerHeight + 50; // End 50px below the screen
             
             snowflake.animate([
-                { transform: 'translateY(-100px)', left: snowflake.style.left },
-                { transform: 'translateY(100vh)', left: endLeft + 'vw' }
+                { 
+                    transform: `translateY(${startY}px)`, 
+                    left: snowflake.style.left 
+                },
+                { 
+                    transform: `translateY(${endY}px)`, 
+                    left: endLeft + 'vw' 
+                }
             ], {
                 duration: duration * 1000,
                 easing: 'linear'
