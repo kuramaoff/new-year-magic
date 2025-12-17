@@ -7,7 +7,13 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(#001122, #003344);
+            background: linear-gradient(to bottom, 
+                #0a0a14 0%, 
+                #0c0c1a 20%, 
+                #0e0e22 40%, 
+                #10102a 60%, 
+                #121232 80%, 
+                #14143a 100%);
             min-height: 100vh;
             height: 100dvh;
             overflow: hidden;
@@ -22,6 +28,35 @@
             position: fixed;
         }
         
+        /* Добавим звёзды на фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.3) 1px, transparent 2px),
+                radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.2) 1px, transparent 2px),
+                radial-gradient(1px 1px at 30% 40%, rgba(255, 255, 255, 0.3) 1px, transparent 2px),
+                radial-gradient(1px 1px at 40% 50%, rgba(255, 255, 255, 0.2) 1px, transparent 2px),
+                radial-gradient(1px 1px at 50% 60%, rgba(255, 255, 255, 0.3) 1px, transparent 2px),
+                radial-gradient(1px 1px at 60% 70%, rgba(255, 255, 255, 0.2) 1px, transparent 2px),
+                radial-gradient(1px 1px at 70% 80%, rgba(255, 255, 255, 0.3) 1px, transparent 2px),
+                radial-gradient(1px 1px at 80% 90%, rgba(255, 255, 255, 0.2) 1px, transparent 2px),
+                radial-gradient(2px 2px at 90% 10%, rgba(255, 255, 255, 0.4) 1px, transparent 2px);
+            background-size: 200px 200px;
+            z-index: -1;
+            opacity: 0.6;
+            animation: stars-twinkle 3s infinite alternate;
+        }
+        
+        @keyframes stars-twinkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.8; }
+        }
+        
         .container {
             text-align: center;
             z-index: 10;
@@ -34,7 +69,10 @@
         h1 {
             color: #FFD700;
             font-size: clamp(2rem, 8vw, 3.5rem);
-            text-shadow: 0 0 20px #FF0000;
+            text-shadow: 
+                0 0 10px #FF4500,
+                0 0 20px #FF0000,
+                0 0 30px #FF4500;
             margin-bottom: 20px;
             animation: glow 2s infinite alternate;
             line-height: 1.2;
@@ -43,13 +81,17 @@
         }
         
         .message {
-            color: white;
+            color: #f0f0f0;
             font-size: clamp(1.2rem, 4vw, 1.8rem);
             margin: 20px auto;
-            background: rgba(0,50,100,0.5);
+            background: rgba(20, 30, 60, 0.7);
+            backdrop-filter: blur(5px);
             padding: 20px;
             border-radius: 15px;
-            border: 2px solid gold;
+            border: 2px solid #FFD700;
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.3),
+                inset 0 0 20px rgba(255, 215, 0, 0.1);
             max-width: 500px;
             width: 90%;
             line-height: 1.4;
@@ -60,11 +102,23 @@
             font-size: clamp(60px, 20vw, 100px);
             margin: 15px;
             animation: bounce 1s infinite alternate;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
         }
         
         @keyframes glow {
-            from { text-shadow: 0 0 10px #FF0000; }
-            to { text-shadow: 0 0 30px #FFD700, 0 0 40px #FF0000; }
+            0% { 
+                text-shadow: 
+                    0 0 10px #FF4500,
+                    0 0 20px #FF0000,
+                    0 0 30px #FF4500;
+            }
+            100% { 
+                text-shadow: 
+                    0 0 15px #FFD700,
+                    0 0 25px #FF4500,
+                    0 0 35px #FF0000,
+                    0 0 45px #FF4500;
+            }
         }
         
         @keyframes bounce {
@@ -74,11 +128,13 @@
         
         .snowflake {
             position: absolute;
-            color: white;
+            color: #ffffff;
             font-size: 20px;
             user-select: none;
             pointer-events: none;
-            opacity: 0.8;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+            z-index: 1;
         }
         
         /* Improved Fireworks */
@@ -88,6 +144,7 @@
             height: 4px;
             border-radius: 50%;
             pointer-events: none;
+            z-index: 2;
         }
         
         .confetti {
@@ -96,6 +153,7 @@
             height: 10px;
             opacity: 0;
             pointer-events: none;
+            z-index: 2;
         }
         
         .popper {
@@ -106,6 +164,7 @@
             border-radius: 50%;
             pointer-events: none;
             display: none;
+            z-index: 2;
         }
         
         /* Mobile specific adjustments */
@@ -127,6 +186,11 @@
             
             .tree {
                 margin: 10px;
+            }
+            
+            body::before {
+                opacity: 0.5;
+                background-size: 150px 150px;
             }
         }
         
@@ -165,6 +229,21 @@
                 padding: 15px;
             }
         }
+        
+        /* Добавим лёгкую дымку на горизонте */
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, 
+                rgba(10, 10, 30, 0.8) 0%,
+                transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
     </style>
 </head>
 <body>
@@ -187,7 +266,7 @@
             snowflake.style.left = Math.random() * 100 + 'vw';
             snowflake.style.top = '-50px'; // Start above the screen
             snowflake.style.fontSize = Math.random() * 15 + 10 + 'px';
-            snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+            snowflake.style.opacity = Math.random() * 0.5 + 0.4;
             document.body.appendChild(snowflake);
             
             // Animation - from above screen to below screen
@@ -199,11 +278,18 @@
             snowflake.animate([
                 { 
                     transform: `translateY(${startY}px)`, 
-                    left: snowflake.style.left 
+                    left: snowflake.style.left,
+                    opacity: 0 
+                },
+                { 
+                    transform: `translateY(${startY + 50}px)`, 
+                    left: snowflake.style.left,
+                    opacity: 1 
                 },
                 { 
                     transform: `translateY(${endY}px)`, 
-                    left: endLeft + 'vw' 
+                    left: endLeft + 'vw',
+                    opacity: 0.8 
                 }
             ], {
                 duration: duration * 1000,
@@ -217,7 +303,7 @@
         function createFirework() {
             const x = Math.random() * 80 + 10; // Keep fireworks in view
             const y = Math.random() * 50 + 10;
-            const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            const color = `hsl(${Math.random() * 360}, 100%, 70%)`; // Brighter colors for dark background
             const particleCount = 80 + Math.random() * 80; // Reduced for mobile
             
             // Create launch trail
@@ -226,7 +312,7 @@
             trail.style.left = x + 'vw';
             trail.style.top = '100vh';
             trail.style.background = color;
-            trail.style.boxShadow = `0 0 10px ${color}`;
+            trail.style.boxShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
             document.body.appendChild(trail);
             
             // Launch animation
@@ -252,7 +338,7 @@
                 particle.style.left = x + 'vw';
                 particle.style.top = y + 'vh';
                 particle.style.background = color;
-                particle.style.boxShadow = `0 0 8px ${color}`;
+                particle.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
                 document.body.appendChild(particle);
                 
                 // Random direction
@@ -281,18 +367,19 @@
             flash.style.position = 'absolute';
             flash.style.left = (x - 5) + 'vw';
             flash.style.top = (y - 5) + 'vh';
-            flash.style.width = '8vw'; // Smaller for mobile
-            flash.style.height = '8vh';
+            flash.style.width = '10vw'; 
+            flash.style.height = '10vh';
             flash.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
-            flash.style.opacity = '0.4'; // Less intense
+            flash.style.opacity = '0.5';
             flash.style.pointerEvents = 'none';
+            flash.style.zIndex = '1';
             document.body.appendChild(flash);
             
             flash.animate([
-                { opacity: 0.4, transform: 'scale(0.5)' },
-                { opacity: 0, transform: 'scale(1.5)' } // Smaller explosion
+                { opacity: 0.5, transform: 'scale(0.5)' },
+                { opacity: 0, transform: 'scale(2)' }
             ], {
-                duration: 250,
+                duration: 300,
                 easing: 'ease-out'
             }).onfinish = () => flash.remove();
         }
@@ -315,9 +402,10 @@
                 confetti.className = 'confetti';
                 confetti.style.left = x + 'px';
                 confetti.style.top = y + 'px';
-                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`; // Brighter
                 confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
                 confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confetti.style.boxShadow = '0 0 5px currentColor';
                 document.body.appendChild(confetti);
                 
                 const angle = Math.random() * Math.PI * 2;
