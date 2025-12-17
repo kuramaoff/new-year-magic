@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>С Новым Годом! 🎄</title>
+    <title>Happy New Year! 🎄</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -13,6 +13,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
         }
         
         .container {
@@ -37,6 +38,7 @@
             padding: 15px;
             border-radius: 15px;
             border: 2px solid gold;
+            max-width: 500px;
         }
         
         .tree {
@@ -64,30 +66,47 @@
             opacity: 0.8;
         }
         
-        .firework {
+        /* Improved Fireworks */
+        .firework-particle {
             position: absolute;
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
-            box-shadow: 0 0 10px #FFD700;
+            pointer-events: none;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .popper {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #FF0000 0%, #FF4500 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="tree">🎄</div>
-        <h1>С Новым 2025 Годом!</h1>
+        <h1>Happy New Year 2026!</h1>
         <div class="message">
-            Пусть этот год принесёт<br>
-            много радости, удачи<br>
-            и исполнения желаний!<br>
+            May all your wishes come true in the new year!<br>
             🎅✨🎁
         </div>
         <div class="tree">🎁</div>
     </div>
 
     <script>
-        // Создание снежинок
+        // Snowflake creation
         function createSnowflake() {
             const snowflake = document.createElement('div');
             snowflake.innerHTML = '❄';
@@ -97,7 +116,7 @@
             snowflake.style.opacity = Math.random() * 0.5 + 0.3;
             document.body.appendChild(snowflake);
             
-            // Анимация падения
+            // Animation
             const duration = Math.random() * 5 + 5;
             const endLeft = parseFloat(snowflake.style.left) + (Math.random() * 50 - 25);
             
@@ -112,35 +131,182 @@
             setTimeout(() => snowflake.remove(), duration * 1000);
         }
         
-        // Создание фейерверков
+        // Realistic firework explosion
         function createFirework() {
-            const firework = document.createElement('div');
-            firework.className = 'firework';
-            firework.style.left = Math.random() * 100 + 'vw';
-            firework.style.top = Math.random() * 100 + 'vh';
-            firework.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
-            document.body.appendChild(firework);
+            const x = Math.random() * 80 + 10; // Keep fireworks in view
+            const y = Math.random() * 50 + 10;
+            const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            const particleCount = 100 + Math.random() * 100;
             
-            firework.animate([
-                { transform: 'scale(1)', opacity: 1 },
-                { transform: 'scale(20)', opacity: 0 }
+            // Create launch trail
+            const trail = document.createElement('div');
+            trail.className = 'firework-particle';
+            trail.style.left = x + 'vw';
+            trail.style.top = '100vh';
+            trail.style.background = color;
+            trail.style.boxShadow = `0 0 10px ${color}`;
+            document.body.appendChild(trail);
+            
+            // Launch animation
+            trail.animate([
+                { transform: 'scale(1)', top: '100vh' },
+                { transform: 'scale(0.5)', top: y + 'vh' }
             ], {
-                duration: 1000,
+                duration: 800,
                 easing: 'ease-out'
-            });
+            }).onfinish = () => {
+                trail.remove();
+                createExplosion(x, y, color, particleCount);
+            };
             
-            setTimeout(() => firework.remove(), 1000);
+            setTimeout(() => trail.remove(), 800);
         }
         
-        // Запуск анимаций
-        setInterval(createSnowflake, 200);
-        setInterval(createFirework, 800);
+        // Create explosion effect
+        function createExplosion(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                particle.style.left = x + 'vw';
+                particle.style.top = y + 'vh';
+                particle.style.background = color;
+                particle.style.boxShadow = `0 0 8px ${color}`;
+                document.body.appendChild(particle);
+                
+                // Random direction
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 1 + Math.random() * 2;
+                const distance = 5 + Math.random() * 10;
+                
+                const animation = particle.animate([
+                    { 
+                        transform: 'translate(0, 0) scale(1)', 
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translate(${Math.cos(angle) * distance}vw, ${Math.sin(angle) * distance}vh) scale(0)`, 
+                        opacity: 0 
+                    }
+                ], {
+                    duration: 800 + Math.random() * 400,
+                    easing: 'ease-out'
+                });
+                
+                animation.onfinish = () => particle.remove();
+            }
+            
+            // Flash effect
+            const flash = document.createElement('div');
+            flash.style.position = 'absolute';
+            flash.style.left = (x - 5) + 'vw';
+            flash.style.top = (y - 5) + 'vh';
+            flash.style.width = '10vw';
+            flash.style.height = '10vh';
+            flash.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+            flash.style.opacity = '0.5';
+            flash.style.pointerEvents = 'none';
+            document.body.appendChild(flash);
+            
+            flash.animate([
+                { opacity: 0.5, transform: 'scale(0.5)' },
+                { opacity: 0, transform: 'scale(2)' }
+            ], {
+                duration: 300,
+                easing: 'ease-out'
+            }).onfinish = () => flash.remove();
+        }
         
-        // Новогодняя музыка при клике (опционально)
-        document.body.addEventListener('click', function() {
-            const audio = new Audio('https://zvukipro.com/uploads/files/2022-12/1671727007_budilnik-s-novym-godom.mp3');
-            audio.volume = 0.3;
-            audio.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+        // Party popper effect on click/tap
+        function createPartyPopper(x, y) {
+            // Create popper base
+            const popper = document.createElement('div');
+            popper.className = 'popper';
+            popper.style.left = x + 'px';
+            popper.style.top = y + 'px';
+            popper.style.display = 'block';
+            document.body.appendChild(popper);
+            
+            // Explode into confetti
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = x + 'px';
+                confetti.style.top = y + 'px';
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                document.body.appendChild(confetti);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 100;
+                
+                confetti.animate([
+                    { 
+                        transform: 'translate(0, 0) rotate(0deg) scale(1)', 
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance - 50}px) rotate(${Math.random() * 720}deg) scale(0)`, 
+                        opacity: 0 
+                    }
+                ], {
+                    duration: 800 + Math.random() * 400,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.9, 0.1)'
+                }).onfinish = () => confetti.remove();
+            }
+            
+            // Remove popper
+            setTimeout(() => popper.remove(), 100);
+            
+            // Play pop sound
+            playPopSound();
+        }
+        
+        // Play pop sound
+        function playPopSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+        
+        // Start animations
+        setInterval(createSnowflake, 200);
+        setInterval(createFirework, 1500);
+        
+        // Click/tap handler for party popper
+        document.addEventListener('click', function(e) {
+            createPartyPopper(e.clientX, e.clientY);
+            
+            // Also play New Year music on first click
+            if (!window.musicPlayed) {
+                window.musicPlayed = true;
+                const audio = new Audio('https://assets.mixkit.co/music/preview/mixkit-happy-new-year-987.mp3');
+                audio.volume = 0.3;
+                audio.play().catch(e => console.log("Autoplay blocked"));
+            }
+        });
+        
+        // Touch support for mobile
+        document.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            createPartyPopper(touch.clientX, touch.clientY);
+        });
+        
+        // Prevent context menu on long press
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
         });
     </script>
 </body>
