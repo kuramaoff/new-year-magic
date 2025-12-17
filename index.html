@@ -2,48 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy New Year! 🎄</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: linear-gradient(#001122, #003344);
-            height: 100vh;
+            min-height: 100vh;
+            height: 100dvh;
             overflow: hidden;
             font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            touch-action: manipulation;
+            padding: 20px;
+            width: 100vw;
+            position: fixed;
         }
         
         .container {
             text-align: center;
             z-index: 10;
             position: relative;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
         }
         
         h1 {
             color: #FFD700;
-            font-size: 3rem;
+            font-size: clamp(2rem, 8vw, 3.5rem);
             text-shadow: 0 0 20px #FF0000;
             margin-bottom: 20px;
             animation: glow 2s infinite alternate;
+            line-height: 1.2;
+            word-wrap: break-word;
+            padding: 0 10px;
         }
         
         .message {
             color: white;
-            font-size: 1.5rem;
-            margin: 20px 0;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            margin: 20px auto;
             background: rgba(0,50,100,0.5);
-            padding: 15px;
+            padding: 20px;
             border-radius: 15px;
             border: 2px solid gold;
             max-width: 500px;
+            width: 90%;
+            line-height: 1.4;
+            word-wrap: break-word;
         }
         
         .tree {
-            font-size: 100px;
-            margin: 20px;
+            font-size: clamp(60px, 20vw, 100px);
+            margin: 15px;
             animation: bounce 1s infinite alternate;
         }
         
@@ -92,6 +107,64 @@
             pointer-events: none;
             display: none;
         }
+        
+        /* Mobile specific adjustments */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .message {
+                padding: 15px;
+                width: 95%;
+                margin: 15px auto;
+            }
+            
+            h1 {
+                margin-bottom: 15px;
+                padding: 0 5px;
+            }
+            
+            .tree {
+                margin: 10px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .message {
+                font-size: 1.1rem;
+                padding: 12px;
+            }
+            
+            .tree {
+                font-size: 50px;
+            }
+        }
+        
+        /* Prevent overflow on landscape */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .container {
+                transform: scale(0.85);
+            }
+            
+            .tree {
+                font-size: clamp(40px, 10vh, 80px);
+                margin: 5px;
+            }
+            
+            h1 {
+                margin-bottom: 10px;
+            }
+            
+            .message {
+                margin: 10px auto;
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -136,7 +209,7 @@
             const x = Math.random() * 80 + 10; // Keep fireworks in view
             const y = Math.random() * 50 + 10;
             const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
-            const particleCount = 100 + Math.random() * 100;
+            const particleCount = 80 + Math.random() * 80; // Reduced for mobile
             
             // Create launch trail
             const trail = document.createElement('div');
@@ -175,8 +248,7 @@
                 
                 // Random direction
                 const angle = Math.random() * Math.PI * 2;
-                const speed = 1 + Math.random() * 2;
-                const distance = 5 + Math.random() * 10;
+                const distance = 4 + Math.random() * 8; // Reduced for mobile
                 
                 const animation = particle.animate([
                     { 
@@ -188,7 +260,7 @@
                         opacity: 0 
                     }
                 ], {
-                    duration: 800 + Math.random() * 400,
+                    duration: 600 + Math.random() * 300, // Shorter for mobile
                     easing: 'ease-out'
                 });
                 
@@ -200,18 +272,18 @@
             flash.style.position = 'absolute';
             flash.style.left = (x - 5) + 'vw';
             flash.style.top = (y - 5) + 'vh';
-            flash.style.width = '10vw';
-            flash.style.height = '10vh';
+            flash.style.width = '8vw'; // Smaller for mobile
+            flash.style.height = '8vh';
             flash.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
-            flash.style.opacity = '0.5';
+            flash.style.opacity = '0.4'; // Less intense
             flash.style.pointerEvents = 'none';
             document.body.appendChild(flash);
             
             flash.animate([
-                { opacity: 0.5, transform: 'scale(0.5)' },
-                { opacity: 0, transform: 'scale(2)' }
+                { opacity: 0.4, transform: 'scale(0.5)' },
+                { opacity: 0, transform: 'scale(1.5)' } // Smaller explosion
             ], {
-                duration: 300,
+                duration: 250,
                 easing: 'ease-out'
             }).onfinish = () => flash.remove();
         }
@@ -227,7 +299,9 @@
             document.body.appendChild(popper);
             
             // Explode into confetti
-            for (let i = 0; i < 50; i++) {
+            const confettiCount = 40; // Reduced for mobile
+            
+            for (let i = 0; i < confettiCount; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = x + 'px';
@@ -238,7 +312,7 @@
                 document.body.appendChild(confetti);
                 
                 const angle = Math.random() * Math.PI * 2;
-                const distance = 50 + Math.random() * 100;
+                const distance = 30 + Math.random() * 70; // Reduced for mobile
                 
                 confetti.animate([
                     { 
@@ -246,11 +320,11 @@
                         opacity: 1 
                     },
                     { 
-                        transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance - 50}px) rotate(${Math.random() * 720}deg) scale(0)`, 
+                        transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance - 30}px) rotate(${Math.random() * 720}deg) scale(0)`, 
                         opacity: 0 
                     }
                 ], {
-                    duration: 800 + Math.random() * 400,
+                    duration: 600 + Math.random() * 300, // Shorter for mobile
                     easing: 'cubic-bezier(0.1, 0.8, 0.9, 0.1)'
                 }).onfinish = () => confetti.remove();
             }
@@ -282,8 +356,8 @@
         }
         
         // Start animations
-        setInterval(createSnowflake, 200);
-        setInterval(createFirework, 1500);
+        setInterval(createSnowflake, 250); // Slower for mobile
+        setInterval(createFirework, 2000); // Less frequent for mobile
         
         // Click/tap handler for party popper
         document.addEventListener('click', function(e) {
@@ -293,7 +367,7 @@
             if (!window.musicPlayed) {
                 window.musicPlayed = true;
                 const audio = new Audio('https://assets.mixkit.co/music/preview/mixkit-happy-new-year-987.mp3');
-                audio.volume = 0.3;
+                audio.volume = 0.2; // Quieter for mobile
                 audio.play().catch(e => console.log("Autoplay blocked"));
             }
         });
@@ -308,6 +382,24 @@
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
+        
+        // Handle orientation change
+        window.addEventListener('resize', function() {
+            // Force redraw to prevent rendering issues
+            document.body.style.display = 'none';
+            document.body.offsetHeight; // Trigger reflow
+            document.body.style.display = 'flex';
+        });
+        
+        // Prevent zoom on double-tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
     </script>
 </body>
 </html>
